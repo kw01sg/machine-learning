@@ -78,10 +78,29 @@ J = J + regularization_term;
 % Initialize gradient accumulation variables
 delta1 = zeros(size(Theta1));
 delta2 = zeros(size(Theta2));
-disp('size of Theta1 : '), disp (size(Theta1));
-disp('size of Theta2 : '), disp (size(Theta2));
 
+for i = 1:m
+    % Step 1: Feedforward pass and compute activations
+    a_1 = [1; X(i, :)'];
+    z_2 = Theta1 * a_1;
+    a_2 = [1; sigmoid(z_2)];
+    z_3 = Theta2 * a_2;
+    a_3 = sigmoid(z_3);
 
+    % Step 2: Compute sigma_3
+    sigma_3 = a_3 - (y(i) == [1:num_labels])';
+
+    % Step 3: compute sigma_2
+    sigma_2 = Theta2(:, 2:end)' * sigma_3 .* sigmoidGradient(z_2);
+
+    % Step 4: accumulate gradient
+    delta1 = delta1 + sigma_2 * a_1';
+    delta2 = delta2 + sigma_3 * a_2';
+endfor
+
+% Step 5: Compute gradient
+Theta1_grad = delta1 ./ m;
+Theta2_grad = delta2 ./ m;
 
 % Part 3: Implement regularization with the cost function and gradients.
 %
