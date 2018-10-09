@@ -20,3 +20,23 @@ fprintf('Training Accuracy: %f\n', mean(double(p == y)) * 100);
 % test spam classification
 p = svmPredict(model, X_test);
 fprintf('Test Accuracy: %f\n', mean(double(p == y_test)) * 100);
+
+
+% test sample email 1
+filename = 'emailSample1.txt';
+fileContent = readFile(filename);
+tokenizedEmail = processEmail(fileContent);
+emailIndices = mapEmails({tokenizedEmail});
+p = svmPredict(model, emailIndices);
+fprintf('\nProcessed %s\n\nSpam Classification: %d\n', filename, p);
+fprintf('(1 indicates spam, 0 indicates not spam)\n\n');
+
+
+% test sample email 2
+filename = 'emailSample2.txt';
+fileContent = readFile(filename);
+tokenizedEmail = processEmail(fileContent);
+emailIndices = mapEmails({tokenizedEmail});
+p = svmPredict(model, emailIndices);
+fprintf('\nProcessed %s\n\nSpam Classification: %d\n', filename, p);
+fprintf('(1 indicates spam, 0 indicates not spam)\n\n');
