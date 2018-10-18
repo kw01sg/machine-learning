@@ -40,21 +40,29 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+% Compute cost
+predictions = X * Theta'; 
+J = (1/2) * sum(sum((predictions - Y) .^ 2 .* R));
+
+% Add regularization parameters for cost
+J = J + (lambda / 2) * sum(sum(Theta .^ 2)) + (lambda / 2) * sum(sum(X .^ 2));
 
 
+% Compute gradient of X
+for i = 1:size(X, 1)
+    X_grad(i, :) = (X(i, :) * Theta' - Y(i, :)) .* R(i, :) * Theta; 
 
+    % Add regularization parameter
+    X_grad(i, :) = X_grad(i, :) + lambda .* X(i, :);
+endfor
 
+% Compute gradient of theta
+for j = 1:size(Theta, 1)
+    Theta_grad(j, :) = ((X * Theta(j, :)' - Y(:, j)) .*  R(:, j))' * X;
 
-
-
-
-
-
-
-
-
-
-
+    % Add regularization parameter
+    Theta_grad(j, :) = Theta_grad(j, :) + lambda .* Theta(j, :);
+endfor
 % =============================================================
 
 grad = [X_grad(:); Theta_grad(:)];
